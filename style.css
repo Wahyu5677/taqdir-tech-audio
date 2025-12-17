@@ -195,19 +195,41 @@ body {
   }
 
   .has-header {
-    padding-top: 64px;
+    padding-top: 92px;
   }
 
   .site-header__inner {
     padding: 12px 16px;
+    flex-wrap: wrap;
+  }
+
+  .site-header__brand {
+    flex: 1 1 auto;
   }
 
   .site-header__nav {
-    gap: 8px;
+    flex: 1 1 100%;
+    width: 100%;
+    gap: 10px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .site-header__nav::-webkit-scrollbar {
+    display: none;
   }
 
   .site-header__link {
     padding: 8px 8px;
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  .header-filters__panel {
+    max-height: min(70vh, 420px);
+    overflow: auto;
   }
 
   .back-to-top {
