@@ -94,6 +94,11 @@ function getData() {
         `;
     }
 
+    const searchInput = document.getElementById('searchInput');
+    const colorFilter = document.getElementById('colorFilter');
+    const sortSelect = document.getElementById('sortSelect');
+    const clearFilters = document.getElementById('clearFilters');
+
     fetch("assets/data.json")
         .then(response => {
             if (!response.ok) {
@@ -106,86 +111,183 @@ function getData() {
                 return;
             }
 
-            productList.textContent = "";
-            const cards = [];
+            const originalItems = Array.isArray(items) ? items.slice() : [];
 
-            items.forEach((item, index) => {
-                const card = document.createElement("div");
+            const parsePrice = (value) => {
+                if (!value) return Number.NaN;
+                const num = String(value).replace(/[^0-9.]/g, '');
+                return Number(num);
+            };
 
-                // tambahkan href ini
-                const productUrl = `detail.html?id=${encodeURIComponent(item.id)}`;
+            const normalize = (value) => String(value || '').trim().toLowerCase();
 
-                card.className = "product fade-in"
-                card.style.backgroundImage = `url(${item.image})`;
-                card.style.animationDelay = `${index * 0.1}s`;
+            const populateColorOptions = () => {
+                if (!colorFilter) return;
+                const colors = Array.from(new Set(originalItems.map((it) => (it && it.color ? String(it.color).trim() : '')).filter(Boolean)));
+                colors.sort((a, b) => a.localeCompare(b));
+                const keepFirst = colorFilter.querySelector('option[value=""]');
+                colorFilter.textContent = '';
+                if (keepFirst) {
+                    colorFilter.appendChild(keepFirst);
+                } else {
+                    const opt = document.createElement('option');
+                    opt.value = '';
+                    opt.textContent = 'Semua';
+                    colorFilter.appendChild(opt);
+                }
+                colors.forEach((c) => {
+                    const opt = document.createElement('option');
+                    opt.value = c;
+                    opt.textContent = c;
+                    colorFilter.appendChild(opt);
+                });
+            };
 
-                card.innerHTML = `
-                    <a class="product-content" href="${productUrl}">
+            const applyFilters = () => {
+                const q = normalize(searchInput ? searchInput.value : '');
+                const selectedColor = colorFilter ? String(colorFilter.value || '').trim() : '';
+                const sortMode = sortSelect ? String(sortSelect.value || 'featured') : 'featured';
 
-                      <h1 class="title">${item.title}</h1>
-                      <p class="subtitle">${item.subtitle}</p>
+                let list = originalItems.slice();
 
-                      <div class="product-stats">
-
-                        <div class="stat">
-                            <span class="label">Warna</span>
-                            <span class="value">${item.color}</span>
-                        </div>
-
-                        <div class="stat">
-                            <span class="label">Baterai</span>
-                            <span class="value">${item.battery}</span>
-                        </div>
-
-                        <div class="stat">
-                            <span class="label">Bobot</span>
-                            <span class="value">${item.weight}</span>
-                        </div>
-
-                        <div class="stat">
-                            <span class="label">Latency</span>
-                            <span class="value">${item.latency}</span>
-                        </div>
-
-                        <div class="stat">
-                            <span class="label">Harga</span>
-                            <span class="value">${item.price}</span>
-                        </div>
-
-                      </div>
-                    </a>
-                `;
-
-                // tambahkan handler direction
-                const content = card.querySelector(".product-content")
-                
-                if (content) {
-                    content.href = productUrl;
+                if (q) {
+                    list = list.filter((it) => {
+                        const hay = `${normalize(it.title)} ${normalize(it.subtitle)} ${normalize(it.description)} ${normalize(it.badge)} ${normalize(it.color)}`;
+                        return hay.includes(q);
+                    });
                 }
 
-                productList.appendChild(card);
-                cards.push(card);
-            });
+                if (selectedColor) {
+                    list = list.filter((it) => String(it.color || '').trim() === selectedColor);
+                }
 
-            function reveal() {
-                for (const card of cards) {
-                    const {top, bottom} = card.getBoundingClientRect();
+                if (sortMode === 'titleAsc') {
+                    list.sort((a, b) => String(a.title || '').localeCompare(String(b.title || '')));
+                } else if (sortMode === 'priceAsc') {
+                    list.sort((a, b) => (parsePrice(a.price) || 0) - (parsePrice(b.price) || 0));
+                } else if (sortMode === 'priceDesc') {
+                    list.sort((a, b) => (parsePrice(b.price) || 0) - (parsePrice(a.price) || 0));
+                }
 
-                    if (top < window.innerHeight * 0.85 && bottom > window.innerHeight * 0.15) {
-                        card.classList.add("show");
+                return list;
+            };
+
+            const renderItems = (list) => {
+                productList.textContent = '';
+
+                if (!Array.isArray(list) || list.length === 0) {
+                    productList.innerHTML = `
+                        <div class="loading-container">
+                            <div class="loading-text">Produk tidak ditemukan.</div>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const cards = [];
+
+                list.forEach((item, index) => {
+                    const card = document.createElement("div");
+                    const productUrl = `detail.html?id=${encodeURIComponent(item.id)}`;
+
+                    card.className = "product fade-in";
+                    card.style.backgroundImage = `url(${item.image})`;
+                    card.style.animationDelay = `${index * 0.1}s`;
+
+                    card.innerHTML = `
+                        <a class="product-content" href="${productUrl}">
+
+                          <h1 class="title">${item.title}</h1>
+                          <p class="subtitle">${item.subtitle}</p>
+
+                          <div class="product-stats">
+
+                            <div class="stat">
+                                <span class="label">Warna</span>
+                                <span class="value">${item.color}</span>
+                            </div>
+
+                            <div class="stat">
+                                <span class="label">Baterai</span>
+                                <span class="value">${item.battery}</span>
+                            </div>
+
+                            <div class="stat">
+                                <span class="label">Bobot</span>
+                                <span class="value">${item.weight}</span>
+                            </div>
+
+                            <div class="stat">
+                                <span class="label">Latency</span>
+                                <span class="value">${item.latency}</span>
+                            </div>
+
+                            <div class="stat">
+                                <span class="label">Harga</span>
+                                <span class="value">${item.price}</span>
+                            </div>
+
+                          </div>
+                        </a>
+                    `;
+
+                    const content = card.querySelector(".product-content");
+                    if (content) {
+                        content.href = productUrl;
+                    }
+
+                    productList.appendChild(card);
+                    cards.push(card);
+                });
+
+                function reveal() {
+                    for (const card of cards) {
+                        const {top, bottom} = card.getBoundingClientRect();
+
+                        if (top < window.innerHeight * 0.85 && bottom > window.innerHeight * 0.15) {
+                            card.classList.add("show");
+                        }
                     }
                 }
+
+                setTimeout(() => {
+                    reveal();
+                    window.addEventListener("scroll", reveal, {passive: true});
+                    window.addEventListener("resize", reveal);
+
+                    new ScrollEffects();
+                }, 300);
+            };
+
+            populateColorOptions();
+            renderItems(applyFilters());
+
+            const update = () => renderItems(applyFilters());
+
+            if (searchInput) {
+                let t;
+                searchInput.addEventListener('input', () => {
+                    window.clearTimeout(t);
+                    t = window.setTimeout(update, 120);
+                });
             }
 
-            // Enhanced reveal with staggered animation
-            setTimeout(() => {
-                reveal();
-                window.addEventListener("scroll", reveal, {passive: true});
-                window.addEventListener("resize", reveal);
-                
-                // Initialize scroll effects
-                new ScrollEffects();
-            }, 300);
+            if (colorFilter) {
+                colorFilter.addEventListener('change', update);
+            }
+
+            if (sortSelect) {
+                sortSelect.addEventListener('change', update);
+            }
+
+            if (clearFilters) {
+                clearFilters.addEventListener('click', () => {
+                    if (searchInput) searchInput.value = '';
+                    if (colorFilter) colorFilter.value = '';
+                    if (sortSelect) sortSelect.value = 'featured';
+                    update();
+                });
+            }
         })
         .catch(() => {
             if (productList) {
@@ -208,6 +310,90 @@ document.addEventListener('DOMContentLoaded', function() {
     const chatForm = document.getElementById('chatForm');
     const chatInput = document.getElementById('chatInput');
     const chatMessages = document.getElementById('chatMessages');
+    const backToTop = document.getElementById('backToTop');
+    const filterToggle = document.getElementById('filterToggle');
+    const headerFilters = document.getElementById('headerFilters');
+    const searchInput = document.getElementById('searchInput');
+
+    // Back to top button
+    if (backToTop) {
+        const updateBackToTop = () => {
+            if (window.scrollY > 500) {
+                backToTop.classList.add('show');
+            } else {
+                backToTop.classList.remove('show');
+            }
+        };
+
+        updateBackToTop();
+        window.addEventListener('scroll', updateBackToTop, { passive: true });
+
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
+
+    // Smooth scroll for internal anchor links
+    document.querySelectorAll('a[href^="#"]').forEach((a) => {
+        a.addEventListener('click', (e) => {
+            const href = a.getAttribute('href');
+            if (!href || href === '#') {
+                return;
+            }
+            const target = document.querySelector(href);
+            if (!target) {
+                return;
+            }
+            e.preventDefault();
+            const header = document.querySelector('.site-header');
+            const headerOffset = header ? header.offsetHeight + 10 : 0;
+            const top = target.getBoundingClientRect().top + window.pageYOffset - headerOffset;
+            window.scrollTo({ top, behavior: 'smooth' });
+        });
+    });
+
+    // Header filter dropdown
+    if (filterToggle && headerFilters) {
+        const closeFilters = () => {
+            headerFilters.classList.remove('show');
+            headerFilters.setAttribute('aria-hidden', 'true');
+            filterToggle.setAttribute('aria-expanded', 'false');
+        };
+
+        const openFilters = () => {
+            headerFilters.classList.add('show');
+            headerFilters.setAttribute('aria-hidden', 'false');
+            filterToggle.setAttribute('aria-expanded', 'true');
+            if (searchInput) {
+                setTimeout(() => searchInput.focus(), 0);
+            }
+        };
+
+        filterToggle.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (headerFilters.classList.contains('show')) {
+                closeFilters();
+            } else {
+                openFilters();
+            }
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!headerFilters.classList.contains('show')) return;
+            const target = e.target;
+            if (target instanceof Node && (headerFilters.contains(target) || filterToggle.contains(target))) {
+                return;
+            }
+            closeFilters();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeFilters();
+            }
+        });
+    }
     
     // Toggle chat popup
     if (chatButton && chatPopup) {
