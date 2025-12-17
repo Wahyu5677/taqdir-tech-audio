@@ -6,6 +6,8 @@
     <title>Taqdir Tech Audio || High Quality Sound Equipment</title>
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="detail.css" />
+    <link rel="icon" type="image/png" href="assets/images/favicon.png" />
+    <link rel="apple-touch-icon" href="assets/images/favicon.png" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -14,12 +16,27 @@
       rel="stylesheet"
     />
   </head>
-  <body detail-product>
+  <body class="has-header" detail-product>
+    <header class="site-header">
+      <div class="site-header__inner">
+        <a class="site-header__brand" href="index.html">Taqdir Tech Audio</a>
+        <nav class="site-header__nav" aria-label="Primary">
+          <a class="site-header__link" href="index.html">Home</a>
+          <a class="site-header__link" href="#productDetail">Detail</a>
+          <a class="site-header__link" href="#siteFooter">Kontak</a>
+        </nav>
+      </div>
+    </header>
+
     <section class="productDetail" id="productDetail">  
         <p>Loading...</p>
     </section>
 
-    <footer class="site-footer">
+    <button class="back-to-top" id="backToTop" type="button" aria-label="Back to top">
+      ↑
+    </button>
+
+    <footer class="site-footer" id="siteFooter">
       <div class="site-footer__inner">
         <div class="site-footer__brand">
           <h2 class="site-footer__title">Taqdir Tech Audio</h2>
