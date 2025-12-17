@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Taqdir Audio || High Quality Sound Equipment</title>
     <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="assets/images/favicon.png" />
+    <link rel="apple-touch-icon" href="assets/images/favicon.png" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -13,9 +15,52 @@
       rel="stylesheet"
     />
   </head>
-  <body>
+  <body class="has-header">
     <div class="scroll-progress" id="scrollProgress"></div>
     <div class="particles" id="particles"></div>
+
+    <header class="site-header">
+      <div class="site-header__inner">
+        <a class="site-header__brand" href="#">Taqdir Tech Audio</a>
+        <nav class="site-header__nav" aria-label="Primary">
+          <a class="site-header__link" href="#">Home</a>
+          <a class="site-header__link" href="#productList">Produk</a>
+          <a class="site-header__link" href="#siteFooter">Kontak</a>
+          <button class="site-header__link site-header__button" id="filterToggle" type="button" aria-haspopup="dialog" aria-expanded="false">Filter</button>
+        </nav>
+
+        <div class="header-filters" id="headerFilters" aria-hidden="true">
+          <div class="header-filters__panel" role="dialog" aria-label="Product filters">
+            <div class="header-filters__row">
+              <div class="catalog-controls__field">
+                <label class="catalog-controls__label" for="searchInput">Cari</label>
+                <input class="catalog-controls__input" id="searchInput" type="search" placeholder="Cari produk..." autocomplete="off" />
+              </div>
+
+              <div class="catalog-controls__field">
+                <label class="catalog-controls__label" for="colorFilter">Warna</label>
+                <select class="catalog-controls__select" id="colorFilter">
+                  <option value="">Semua</option>
+                </select>
+              </div>
+
+              <div class="catalog-controls__field">
+                <label class="catalog-controls__label" for="sortSelect">Urutkan</label>
+                <select class="catalog-controls__select" id="sortSelect">
+                  <option value="featured">Default</option>
+                  <option value="titleAsc">Nama A-Z</option>
+                  <option value="priceAsc">Harga Termurah</option>
+                  <option value="priceDesc">Harga Termahal</option>
+                </select>
+              </div>
+
+              <button class="catalog-controls__clear" id="clearFilters" type="button">Reset</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
     <section class="hero">
       <div class="hero-text parallax-element">
         <h1>Taqdir Tech Audio</h1>
@@ -28,7 +73,11 @@
 
     <div id="productList"></div>
 
-    <footer class="site-footer">
+    <button class="back-to-top" id="backToTop" type="button" aria-label="Back to top">
+      ↑
+    </button>
+
+    <footer class="site-footer" id="siteFooter">
       <div class="site-footer__inner">
         <div class="site-footer__brand">
           <h2 class="site-footer__title">Taqdir Tech Audio</h2>
@@ -43,8 +92,8 @@
 
         <div class="site-footer__contact">
           <h3 class="site-footer__heading">Kontak</h3>
-          <a class="site-footer__link" href="mailto:taqdir.audio@example.com">taqdirwahh22@gmail.com</a>
-          <a class="site-footer__link" href="https://wa.me/627777212910" target="_blank" rel="noreferrer">WhatsApp: +62 777-721-2901</a>
+          <a class="site-footer__link" href="mailto:taqdirwahh22@gmail.com">taqdirwahh22@gmail.com</a>
+          <a class="site-footer__link" href="https://wa.me/627777212901" target="_blank" rel="noreferrer">WhatsApp: +62 777-721-2901</a>
         </div>
       </div>
 
