@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Taqdir Tech Audio || High Quality Sound Equipment</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="detail.css" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Days+One&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body detail-product>
+    <section class="productDetail" id="productDetail">  
+        <p>Loading...</p>
+    </section>
+
+    <footer class="site-footer">
+      <div class="site-footer__inner">
+        <div class="site-footer__brand">
+          <h2 class="site-footer__title">Taqdir Tech Audio</h2>
+          <p class="site-footer__desc">High quality sound equipment untuk pengalaman audio yang lebih maksimal.</p>
+        </div>
+
+        <nav class="site-footer__links" aria-label="Footer">
+          <h3 class="site-footer__heading">Tautan</h3>
+          <a class="site-footer__link" href="index.html">Home</a>
+        </nav>
+
+        <div class="site-footer__contact">
+          <h3 class="site-footer__heading">Kontak</h3>
+          <a class="site-footer__link" href="mailto:taqdir.audio@example.com">taqdirwahh22@gmail.com</a>
+          <a class="site-footer__link" href="https://wa.me/62777212901" target="_blank" rel="noreferrer">WhatsApp: +62 777-721-2901</a>
+        </div>
+      </div>
+
+      <div class="site-footer__bottom">
+        <span>© <span id="footerYear"></span> Taqdir Tech Audio. All rights reserved.</span>
+      </div>
+    </footer>
+
+    <script>
+      (function () {
+        const yearEl = document.getElementById('footerYear');
+        if (yearEl) yearEl.textContent = String(new Date().getFullYear());
+      })();
+    </script>
+
+    <script src="detail.js" defer></script>
+
+  </body>
+</html>
