@@ -195,3 +195,26 @@ body[detail-product]::before {
     font-weight: 500;
 }
 
+@media (max-width: 768px) {
+    .productDetail {
+        padding: 28px 16px 64px;
+    }
+
+    .detail-hero {
+        height: 320px;
+    }
+
+    .detail-body {
+        padding: 22px;
+    }
+}
+
+@media (max-width: 480px) {
+    .detail-hero {
+        height: 260px;
+    }
+
+    .detail-body {
+        padding: 18px;
+    }
+}
